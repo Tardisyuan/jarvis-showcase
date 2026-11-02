@@ -12,7 +12,7 @@
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/unit_tests-800+-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
 
 **[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd)**
 
@@ -25,6 +25,12 @@
 - **认得家里的人：** 能听声音分辨是谁在说话。每个人有自己的记忆和隐私，访客不能批准任何操作。
 - **在你的授权内办事：** 常用指令经 PIN 授权后可以自动执行，有需要你处理的事情时会主动开口。
 - **一切都能查：** 每次操作都留回执，可以问它为什么这样做，也可以说“撤销”。每个发到家外的请求都有记录。
+
+## 难在哪里
+
+- **在家用服务器的 CPU 上分辨是谁在说话：** 用 WeSpeaker 声纹模型识别说话的人。只保存声纹，不保存音频；身份决定能做什么，访客和小孩不能批准任何操作。
+- **所有操作走同一套规则：** 风险操作都在同一个确认窗口里等待。每次批准都用 HMAC 绑定到具体事项，一旦答复、变更或过期就失效，旧的“同意”不能批准新的事情。
+- **诚实地评估模型：** 照着测试集调提示词，这套题就会偏向被调过的模型。所以候选模型都用一套从不用来调参的冻结留出集比较，答案打乱后盲评。
 
 ## 它能做什么
 
@@ -53,12 +59,6 @@ flowchart LR
   act --> mods["Modules<br/>calendar · archive · maps …"]
   mods -.->|only what you allowed| cloud["Services outside<br/>every request listed"]
 ```
-
-## 难在哪里
-
-- **在家用服务器的 CPU 上分辨是谁在说话：** 用 WeSpeaker 声纹模型识别说话的人。只保存声纹，不保存音频；身份决定能做什么，访客和小孩不能批准任何操作。
-- **所有操作走同一套规则：** 风险操作都在同一个确认窗口里等待。每次批准都用 HMAC 绑定到具体事项，一旦答复、变更或过期就失效，旧的“同意”不能批准新的事情。
-- **诚实地评估模型：** 照着测试集调提示词，这套题就会偏向被调过的模型。所以候选模型都用一套从不用来调参的冻结留出集比较，答案打乱后盲评。
 
 ## 工程
 

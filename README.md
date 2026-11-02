@@ -12,7 +12,7 @@ By **Richard Yuan (Ruihong Yuan)**.
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/unit_tests-800+-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
 
 **[Try the live demo →](https://jarvis-demo.tardisyuan.ltd)**
 
@@ -25,6 +25,12 @@ Most home assistants are a voice remote for your devices. Jarvis is built around
 - **It knows your household.** It tells who is speaking by voice. Each person has their own memories and privacy, and a guest can't approve anything.
 - **It acts for you, within what you grant.** Standing orders run on their own once you grant them with your PIN, and it speaks up when something needs you.
 - **You can check everything.** Every action leaves a receipt, you can ask why it did something or say "undo", and every request that leaves the house is listed.
+
+## What was hard
+
+- **Knowing who is speaking, on a home server's CPU.** A WeSpeaker voiceprint model checks who is speaking. Only the voiceprints are kept, never the audio, and a person's identity decides what they may do: a guest or a child can't approve anything.
+- **One set of rules for everything it may do.** Risky actions wait in one approval window. Each approval is bound by an HMAC to exactly that item and stops working once it is answered, changes or expires, so an old "yes" can't approve something new.
+- **Judging models honestly.** Prompts tuned against a test set make that set flatter the model it was tuned for. So candidates are compared on a frozen held-out set that is never tuned against, with answers shuffled and graded blind.
 
 ## What it does
 
@@ -53,12 +59,6 @@ flowchart LR
   act --> mods["Modules<br/>calendar · archive · maps …"]
   mods -.->|only what you allowed| cloud["Services outside<br/>every request listed"]
 ```
-
-## What was hard
-
-- **Knowing who is speaking, on a home server's CPU.** A WeSpeaker voiceprint model checks who is speaking. Only the voiceprints are kept, never the audio, and a person's identity decides what they may do: a guest or a child can't approve anything.
-- **One set of rules for everything it may do.** Risky actions wait in one approval window. Each approval is bound by an HMAC to exactly that item and stops working once it is answered, changes or expires, so an old "yes" can't approve something new.
-- **Judging models honestly.** Prompts tuned against a test set make that set flatter the model it was tuned for. So candidates are compared on a frozen held-out set that is never tuned against, with answers shuffled and graded blind.
 
 ## Engineering
 
