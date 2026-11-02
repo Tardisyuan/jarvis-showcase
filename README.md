@@ -76,6 +76,10 @@ The [demo](https://jarvis-demo.tardisyuan.ltd) is a static page with no backend 
 
 The source code is private for now. Ask me if you would like to see it.
 
+## License
+
+The text and my own images here: [CC BY 4.0](LICENSE). The V8 in the demo images stays under teardown's MIT licence.
+
 ## Acknowledgements
 
 - **V8 model and animation in the demo:** the V8 example of [teardown](https://github.com/elvarofficial/teardown) by elvarofficial (MIT), recoloured for a dark page. Not my work.

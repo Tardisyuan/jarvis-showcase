@@ -76,6 +76,10 @@ flowchart LR
 
 源码目前是私有的，想看可以联系我。
 
+## 许可
+
+这里的文字和我自己的图片采用 [CC BY 4.0](LICENSE)。演示截图里的 V8 仍遵循 teardown 的 MIT 许可。
+
 ## 致谢
 
 - **演示里的 V8 模型和动画：** 来自 elvarofficial 的 [teardown](https://github.com/elvarofficial/teardown) V8 示例（MIT），我改成了适合深色页面的配色。这部分不是我的作品。
