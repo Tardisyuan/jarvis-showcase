@@ -6,7 +6,7 @@
 
 作者：**Richard Yuan (Ruihong Yuan)**
 
-[![Live demo](https://img.shields.io/badge/live_demo-jarvis--demo.tardisyuan.ltd-3fffd0?style=flat-square)](https://jarvis-demo.tardisyuan.ltd)
+[![Live demo](https://img.shields.io/badge/live_demo-jarvis--demo.tardisyuan.ltd-3fffd0?style=flat-square)](https://jarvis-demo.tardisyuan.ltd/?lang=zh)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
@@ -14,9 +14,9 @@
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
 ![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
 
-**[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd)**
+**[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd/?lang=zh)**
 
-![主界面和粒子球](images/orb.jpg)
+![打开前门：确认窗口、回执，然后撤销](images/door.gif)
 
 ## 它是什么
 
@@ -70,7 +70,7 @@ flowchart LR
 
 ## 关于演示
 
-[在线演示](https://jarvis-demo.tardisyuan.ltd)是静态页面，没有后端，也没有接模型：回复是脚本，数据是假的，声音是提前录好的。它展示的是主界面，不代表助手的真实能力。点“打开前门”可以体验真实的确认窗口、回执和撤销（数据是假的）。在电脑上点“给我看 V8 发动机”：粒子落到发动机表面，实体模型再从中浮现。
+[在线演示](https://jarvis-demo.tardisyuan.ltd/?lang=zh)是静态页面，没有后端，也没有接模型：回复是脚本，数据是假的，声音是提前录好的。它展示的是主界面，不代表助手的真实能力。点“打开前门”可以体验真实的确认窗口、回执和撤销（数据是假的）。在电脑上点“给我看 V8 发动机”：粒子落到发动机表面，实体模型再从中浮现。
 
 ![确认之后的回执](images/door.jpg)
 

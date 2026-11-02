@@ -6,7 +6,7 @@ A household voice butler that lives on your own server. It knows the people it w
 
 By **Richard Yuan (Ruihong Yuan)**.
 
-[![Live demo](https://img.shields.io/badge/live_demo-jarvis--demo.tardisyuan.ltd-3fffd0?style=flat-square)](https://jarvis-demo.tardisyuan.ltd)
+[![Live demo](https://img.shields.io/badge/live_demo-jarvis--demo.tardisyuan.ltd-3fffd0?style=flat-square)](https://jarvis-demo.tardisyuan.ltd/?lang=en)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
@@ -14,9 +14,9 @@ By **Richard Yuan (Ruihong Yuan)**.
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
 ![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
 
-**[Try the live demo →](https://jarvis-demo.tardisyuan.ltd)**
+**[Try the live demo →](https://jarvis-demo.tardisyuan.ltd/?lang=en)**
 
-![The main screen and its particle orb](images/orb.jpg)
+![Unlocking the front door: the approval window, a receipt, then undo](images/door.gif)
 
 ## What it is
 
@@ -70,7 +70,7 @@ flowchart LR
 
 ## About the demo
 
-The [demo](https://jarvis-demo.tardisyuan.ltd) is a static page with no backend and no model: the replies are scripted, the data is made up, and the voice is recorded. It shows the main screen, not the assistant's real abilities. Tap "Unlock the front door" to walk through the real approval window, a receipt and an undo, on made-up data. On a computer, tap "Show me a V8 engine": the orb's particles land on the engine's surface, then the solid model comes up over them.
+The [demo](https://jarvis-demo.tardisyuan.ltd/?lang=en) is a static page with no backend and no model: the replies are scripted, the data is made up, and the voice is recorded. It shows the main screen, not the assistant's real abilities. Tap "Unlock the front door" to walk through the real approval window, a receipt and an undo, on made-up data. On a computer, tap "Show me a V8 engine": the orb's particles land on the engine's surface, then the solid model comes up over them.
 
 ![The approval window, then a receipt](images/door.jpg)
 
