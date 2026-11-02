@@ -54,6 +54,12 @@ flowchart LR
   mods -.->|only what you allowed| cloud["Services outside<br/>every request listed"]
 ```
 
+## What was hard
+
+- **Knowing who is speaking, on a home server's CPU.** A WeSpeaker voiceprint model checks who is speaking. Only the voiceprints are kept, never the audio, and a person's identity decides what they may do: a guest or a child can't approve anything.
+- **One set of rules for everything it may do.** Risky actions wait in one approval window. Each approval is bound by an HMAC to exactly that item and stops working once it is answered, changes or expires, so an old "yes" can't approve something new.
+- **Judging models honestly.** Prompts tuned against a test set make that set flatter the model it was tuned for. So candidates are compared on a frozen held-out set that is never tuned against, with answers shuffled and graded blind.
+
 ## Engineering
 
 - **Backend:** Python and FastAPI, with a plugin system for feature modules.
