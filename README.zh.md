@@ -12,7 +12,7 @@
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-1200+-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/unit_tests-800+-2ea44f?style=flat-square)
 
 **[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd)**
 
@@ -59,7 +59,7 @@ flowchart LR
 - **后端：** Python 和 FastAPI，功能模块用插件方式接入。
 - **模型：** 通过 Ollama 在本地运行，或接任何兼容 OpenAI 的服务。语音用 Kokoro，识别用 SenseVoice 或浏览器自带能力。
 - **前端：** 原生 JavaScript 模块和 three.js，不用框架。粒子球有 8 万颗粒子，画质自动调节。
-- **质量：** 1200 多个测试用例，用固定的留出集评估模型，每次提交都做密钥扫描。
+- **质量：** 约 800 个单元测试、190 多条模型评测，用固定的留出集评估模型，每次提交都做密钥扫描。
 - **运行环境：** Mac、家用服务器上的 Docker，或树莓派 5。
 
 ## 关于演示

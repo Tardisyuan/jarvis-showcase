@@ -12,7 +12,7 @@ By **Richard Yuan (Ruihong Yuan)**.
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-1200+-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/unit_tests-800+-2ea44f?style=flat-square)
 
 **[Try the live demo →](https://jarvis-demo.tardisyuan.ltd)**
 
@@ -59,7 +59,7 @@ flowchart LR
 - **Backend:** Python and FastAPI, with a plugin system for feature modules.
 - **Models:** local through Ollama, or any OpenAI-compatible server. Speech uses Kokoro, and SenseVoice or a browser's own recognition.
 - **Frontend:** plain JavaScript modules and three.js, no framework. The orb is 80,000 particles with auto-adjusting quality.
-- **Quality:** more than 1,200 test cases, a frozen held-out set for judging models, and secret scanning on every commit.
+- **Quality:** about 800 unit tests, 190-odd model evaluations, a frozen held-out set for judging models, and secret scanning on every commit.
 - **Runs on:** a Mac, Docker on a home server, or a Raspberry Pi 5.
 
 ## About the demo
