@@ -70,7 +70,9 @@ flowchart LR
 
 ## About the demo
 
-The [demo](https://jarvis-demo.tardisyuan.ltd) is a static page with no backend and no model: the replies are scripted, the data is made up, and the voice is recorded. It shows the main screen, not the assistant's real abilities. On a computer, tap "Show me a V8 engine": the orb's particles land on the engine's surface, then the solid model comes up over them.
+The [demo](https://jarvis-demo.tardisyuan.ltd) is a static page with no backend and no model: the replies are scripted, the data is made up, and the voice is recorded. It shows the main screen, not the assistant's real abilities. Tap "Unlock the front door" to walk through the real approval window, a receipt and an undo, on made-up data. On a computer, tap "Show me a V8 engine": the orb's particles land on the engine's surface, then the solid model comes up over them.
+
+![The approval window, then a receipt](images/door.jpg)
 
 | Particles land on the engine | The engine comes apart | Running |
 |---|---|---|
