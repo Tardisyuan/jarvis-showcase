@@ -14,7 +14,7 @@
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
 ![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
 
-**[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd/?lang=zh)**
+**[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd/?lang=zh)** · [看 47 秒的录屏（有声音）](media/jarvis-demo.mp4)
 
 ![打开前门：确认窗口、回执，然后撤销](images/door.gif)
 

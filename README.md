@@ -14,7 +14,7 @@ By **Richard Yuan (Ruihong Yuan)**.
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
 ![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
 
-**[Try the live demo →](https://jarvis-demo.tardisyuan.ltd/?lang=en)**
+**[Try the live demo →](https://jarvis-demo.tardisyuan.ltd/?lang=en)** · [Watch the 47-second recording, with sound](media/jarvis-demo.mp4)
 
 ![Unlocking the front door: the approval window, a receipt, then undo](images/door.gif)
 
