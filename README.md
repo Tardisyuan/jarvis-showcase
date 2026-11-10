@@ -7,14 +7,14 @@ A household voice butler that lives on your own server. It knows the people it w
 By **Richard Yuan (Ruihong Yuan)**.
 
 [![Live demo](https://img.shields.io/badge/live_demo-jarvis--demo.tardisyuan.ltd-3fffd0?style=flat-square)](https://jarvis-demo.tardisyuan.ltd/?lang=en)
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/offline_tests-1082-2ea44f?style=flat-square)
 
-**[Try the live demo →](https://jarvis-demo.tardisyuan.ltd/?lang=en)** · [Watch the 47-second recording, with sound](media/jarvis-demo.mp4)
+**[Try the live demo →](https://jarvis-demo.tardisyuan.ltd/?lang=en)** · [How it is built →](https://jarvis-demo.tardisyuan.ltd/how) · [Watch the 47-second recording, with sound](media/jarvis-demo.mp4)
 
 ![Unlocking the front door: the approval window, a receipt, then undo](images/door.gif)
 
@@ -22,23 +22,26 @@ By **Richard Yuan (Ruihong Yuan)**.
 
 Most home assistants are a voice remote for your devices. Jarvis is built around three other things:
 
-- **It knows your household.** It tells who is speaking by voice. Each person has their own memories and privacy, and a guest can't approve anything.
-- **It acts for you, within what you grant.** Standing orders run on their own once you grant them with your PIN, and it speaks up when something needs you.
-- **You can check everything.** Every action leaves a receipt, you can ask why it did something or say "undo", and every request that leaves the house is listed.
+- **It knows your household.** It tells who is speaking by voice. Each person has their own memories and privacy, and a guest can't approve anything. It keeps a family archive and answers from it with the date and the source.
+- **It acts for you, within what you grant.** Standing orders run on their own once you grant them with your PIN, and it speaks up when something needs you, never at night. A standing order never touches a lock.
+- **You can check everything.** Every action leaves a receipt, you can ask why it did something or say "undo", and every request that leaves the house is listed, and it runs on your own model.
 
 ## What was hard
 
-- **Knowing who is speaking, on a home server's CPU.** A WeSpeaker voiceprint model checks who is speaking. Only the voiceprints are kept, never the audio, and a person's identity decides what they may do: a guest or a child can't approve anything.
+- **Knowing who is speaking, on a home server's CPU.** A voiceprint model (3D-Speaker's ERes2Net, through sherpa-onnx) checks who is speaking. Only the voiceprints are kept, never the audio, and a person's identity decides what they may do: a guest or a child can't approve anything. A voice can be replayed, so it says who is asking and is never the only key to a lock.
 - **One set of rules for everything it may do.** Risky actions wait in one approval window. Each approval is bound by an HMAC to exactly that item and stops working once it is answered, changes or expires, so an old "yes" can't approve something new.
+- **Words from outside are not orders.** After Jarvis reads an email or a web page, writes in that round wait for your yes, a quoted "open the door" waits too, and a cloud model never sees that content. The safety rules live in code, in a small package that needs only the standard library, not in the prompt.
 - **Judging models honestly.** Prompts tuned against a test set make that set flatter the model it was tuned for. So candidates are compared on a frozen held-out set that is never tuned against, with answers shuffled and graded blind.
 
 ## What it does
 
-- Talks in Chinese and English, with a "Hey Jarvis" wake word running on the server. Audio is never stored.
+- Talks in Chinese and English (replies follow the language you speak), with a "Hey Jarvis" wake word running on the server. Audio is never stored.
 - Runs the home through Home Assistant, and asks before anything risky.
 - Remembers what you tell it; you can review or delete every memory.
 - Calendar, to-dos, timers, routines and a family archive, with no cloud needed. It answers from a folder of documents and says which file and page the answer came from.
-- About 50 feature modules, each removable: trains and buses, routes on a 3D map, bin day, a shopping list and more.
+- Reminders by time, and by person or place ("next time I walk into the kitchen, remind me about the stove").
+- Room satellites: a Raspberry Pi with a microphone and speaker can sit in another room and recognise voices there.
+- More than 50 feature modules, each removable: trains and buses, routes on a 3D map, bin day, a shopping list and more.
 - A particle orb that shows what it is doing, and an approval window for what waits on you.
 
 ## How it works
@@ -63,14 +66,14 @@ flowchart LR
 ## Engineering
 
 - **Backend:** Python and FastAPI, with a plugin system for feature modules.
-- **Models:** local through Ollama, or any OpenAI-compatible server. Speech uses Kokoro, and SenseVoice or a browser's own recognition.
+- **Models:** local through Ollama, or any OpenAI-compatible server. A small model gets rules to lean on, a larger one fewer (a setting, not automatic); the author's own setup runs gemma4:26b. Speech uses Kokoro, and SenseVoice or a browser's own recognition.
 - **Frontend:** plain JavaScript modules and three.js, no framework. The orb is 80,000 particles with auto-adjusting quality.
-- **Quality:** about 800 unit tests, 190-odd model evaluations, a frozen held-out set for judging models, and secret scanning on every commit.
+- **Quality:** 1082 offline tests that pass, run by CI every day (with page and orb smoke tests), about 250 checks in the model evaluations, a frozen held-out set for judging models, and secret scanning on every commit. Two review rounds of the core code in November 2026 were published with their findings, including the ones that turned out wrong.
 - **Runs on:** a Mac, Docker on a home server, or a Raspberry Pi 5.
 
 ## About the demo
 
-The [demo](https://jarvis-demo.tardisyuan.ltd/?lang=en) is a static page with no backend and no model: the replies are scripted, the data is made up, and the voice is recorded. It shows the main screen, not the assistant's real abilities. Tap "Unlock the front door" to walk through the real approval window, a receipt and an undo, on made-up data. On a computer, tap "Show me a V8 engine": the orb's particles land on the engine's surface, then the solid model comes up over them.
+The [demo](https://jarvis-demo.tardisyuan.ltd/?lang=en) is a static page with no backend and no model: the replies are scripted, the data is made up, and the voice is recorded. It shows the main screen, not the assistant's real abilities. Tap "Unlock the front door" to walk through the real approval window, a receipt and an undo, on made-up data. The [How it is built](https://jarvis-demo.tardisyuan.ltd/how) page shows the architecture, the numbers and the design choices. On a computer, tap "Show me a V8 engine": the orb's particles land on the engine's surface, then the solid model comes up over them.
 
 ![The approval window, then a receipt](images/door.jpg)
 
@@ -92,4 +95,4 @@ The text and my own images here: [CC BY 4.0](LICENSE). The V8 in the demo images
 
 - **V8 model and animation in the demo:** the V8 example of [teardown](https://github.com/elvarofficial/teardown) by elvarofficial (MIT), recoloured for a dark page. Not my work.
 - **The idea of the orb:** [GDDXX-Jarvis](https://github.com/shitoudaidi/GDDXX-Jarvis) by shitoudaidi (MIT) and the demo videos its author shared. Written from scratch; no code was copied.
-- **Built on:** [Home Assistant](https://www.home-assistant.io/), [Ollama](https://ollama.com/), [FastAPI](https://fastapi.tiangolo.com/), [openWakeWord](https://github.com/dscripka/openWakeWord), [WeSpeaker](https://github.com/wenet-e2e/wespeaker), [Kokoro](https://github.com/remsky/Kokoro-FastAPI), [three.js](https://threejs.org/), [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) and SenseVoice by [FunAudioLLM / FunASR](https://github.com/modelscope/FunASR), among others.
+- **Built on:** [Home Assistant](https://www.home-assistant.io/), [Ollama](https://ollama.com/), [FastAPI](https://fastapi.tiangolo.com/), [openWakeWord](https://github.com/dscripka/openWakeWord), [3D-Speaker](https://github.com/modelscope/3D-Speaker), [Kokoro](https://github.com/remsky/Kokoro-FastAPI), [three.js](https://threejs.org/), [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) and SenseVoice by [FunAudioLLM / FunASR](https://github.com/modelscope/FunASR), among others.

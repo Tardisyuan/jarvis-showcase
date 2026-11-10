@@ -7,14 +7,14 @@
 作者：**Richard Yuan (Ruihong Yuan)**
 
 [![Live demo](https://img.shields.io/badge/live_demo-jarvis--demo.tardisyuan.ltd-3fffd0?style=flat-square)](https://jarvis-demo.tardisyuan.ltd/?lang=zh)
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![three.js](https://img.shields.io/badge/three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/unit_tests-about_800-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/offline_tests-1082-2ea44f?style=flat-square)
 
-**[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd/?lang=zh)** · [看 47 秒的录屏（有声音）](media/jarvis-demo.mp4)
+**[打开在线演示 →](https://jarvis-demo.tardisyuan.ltd/?lang=zh)** · [它是怎么做的 →](https://jarvis-demo.tardisyuan.ltd/how) · [看 47 秒的录屏（有声音）](media/jarvis-demo.mp4)
 
 ![打开前门：确认窗口、回执，然后撤销](images/door.gif)
 
@@ -22,23 +22,26 @@
 
 多数家庭助手只是设备的语音遥控器。贾维斯围绕另外三件事来做：
 
-- **认得家里的人：** 能听声音分辨是谁在说话。每个人有自己的记忆和隐私，访客不能批准任何操作。
-- **在你的授权内办事：** 常用指令经 PIN 授权后可以自动执行，有需要你处理的事情时会主动开口。
-- **一切都能查：** 每次操作都留回执，可以问它为什么这样做，也可以说“撤销”。每个发到家外的请求都有记录。
+- **认得家里的人：** 能听声音分辨是谁在说话。每个人有自己的记忆和隐私，访客不能批准任何操作。还有家庭档案，回答时说明日期和出处。
+- **在你的授权内办事：** 常用指令经 PIN 授权后可以自动执行，有需要你处理的事情时会主动开口，夜里不打扰。常用指令永远不碰门锁。
+- **一切都能查：** 每次操作都留回执，可以问它为什么这样做，也可以说“撤销”。每个发到家外的请求都有记录，而且用的是你自己的模型。
 
 ## 难在哪里
 
-- **在家用服务器的 CPU 上分辨是谁在说话：** 用 WeSpeaker 声纹模型识别说话的人。只保存声纹，不保存音频；身份决定能做什么，访客和小孩不能批准任何操作。
+- **在家用服务器的 CPU 上分辨是谁在说话：** 用声纹模型（3D-Speaker 的 ERes2Net，经 sherpa-onnx 运行）识别说话的人。只保存声纹，不保存音频；身份决定能做什么，访客和小孩不能批准任何操作。声音可以被录下来重放，所以它只说明是谁在问，从来不是门锁的唯一钥匙。
 - **所有操作走同一套规则：** 风险操作都在同一个确认窗口里等待。每次批准都用 HMAC 绑定到具体事项，一旦答复、变更或过期就失效，旧的“同意”不能批准新的事情。
+- **外面的话不算命令：** 读过邮件或网页之后，那一轮里的写操作要等你同意，被引用的“打开门”也要等；云端模型看不到这些内容。安全规则写在代码里，放在一个只用标准库的小包中，不靠提示词。
 - **诚实地评估模型：** 照着测试集调提示词，这套题就会偏向被调过的模型。所以候选模型都用一套从不用来调参的冻结留出集比较，答案打乱后盲评。
 
 ## 它能做什么
 
-- 中英文对话，“Hey Jarvis”唤醒词在服务器上运行，音频不保存。
+- 中英文对话（回复跟着你说的语言走），“Hey Jarvis”唤醒词在服务器上运行，音频不保存。
 - 通过 Home Assistant 控制家里的设备，风险操作先问你。
 - 记住你说过的话，每条记忆都能查看和删除。
 - 日历、待办、定时器、例行任务和家庭档案，不依赖云端。还能从一文件夹的文档里找答案，并说明出自哪个文件哪一页。
-- 约 50 个可单独移除的功能模块：火车公交、3D 地图路线、垃圾日、购物清单等。
+- 按时间提醒，也按人、按地点提醒（“下次我进厨房提醒我关火”）。
+- 房间卫星：放在别的房间的树莓派带上麦克风和扬声器，在那里也能认人。
+- 50 多个可单独移除的功能模块：火车公交、3D 地图路线、垃圾日、购物清单等。
 - 显示当前状态的粒子球，以及等你决定事项的确认窗口。
 
 ## 工作方式
@@ -63,14 +66,14 @@ flowchart LR
 ## 工程
 
 - **后端：** Python 和 FastAPI，功能模块用插件方式接入。
-- **模型：** 通过 Ollama 在本地运行，或接任何兼容 OpenAI 的服务。语音用 Kokoro，识别用 SenseVoice 或浏览器自带能力。
+- **模型：** 通过 Ollama 在本地运行，或接任何兼容 OpenAI 的服务。小模型多给规则兜底，大模型少给（手动设置，不自动切换）；作者自己用的是 gemma4:26b。语音用 Kokoro，识别用 SenseVoice 或浏览器自带能力。
 - **前端：** 原生 JavaScript 模块和 three.js，不用框架。粒子球有 8 万颗粒子，画质自动调节。
-- **质量：** 约 800 个单元测试、190 多条模型评测，用固定的留出集评估模型，每次提交都做密钥扫描。
+- **质量：** 1082 个离线测试全过，CI 每天跑（含页面和光球的冒烟测试）；模型评测约 250 项检查；用固定的留出集评估模型；每次提交都做密钥扫描。2026 年 11 月对核心代码做了两轮审查，结论连同查出来不成立的条目一起公开。
 - **运行环境：** Mac、家用服务器上的 Docker，或树莓派 5。
 
 ## 关于演示
 
-[在线演示](https://jarvis-demo.tardisyuan.ltd/?lang=zh)是静态页面，没有后端，也没有接模型：回复是脚本，数据是假的，声音是提前录好的。它展示的是主界面，不代表助手的真实能力。点“打开前门”可以体验真实的确认窗口、回执和撤销（数据是假的）。在电脑上点“给我看 V8 发动机”：粒子落到发动机表面，实体模型再从中浮现。
+[在线演示](https://jarvis-demo.tardisyuan.ltd/?lang=zh)是静态页面，没有后端，也没有接模型：回复是脚本，数据是假的，声音是提前录好的。它展示的是主界面，不代表助手的真实能力。[它是怎么做的](https://jarvis-demo.tardisyuan.ltd/how)页讲了架构、数字和设计取舍。点“打开前门”可以体验真实的确认窗口、回执和撤销（数据是假的）。在电脑上点“给我看 V8 发动机”：粒子落到发动机表面，实体模型再从中浮现。
 
 ![确认之后的回执](images/door.jpg)
 
@@ -92,4 +95,4 @@ flowchart LR
 
 - **演示里的 V8 模型和动画：** 来自 elvarofficial 的 [teardown](https://github.com/elvarofficial/teardown) V8 示例（MIT），我改成了适合深色页面的配色。这部分不是我的作品。
 - **粒子球的灵感：** shitoudaidi 的 [GDDXX-Jarvis](https://github.com/shitoudaidi/GDDXX-Jarvis)（MIT）和作者分享的演示视频。代码是自己从头写的，没有复制。
-- **站在这些项目的肩膀上：** [Home Assistant](https://www.home-assistant.io/)、[Ollama](https://ollama.com/)、[FastAPI](https://fastapi.tiangolo.com/)、[openWakeWord](https://github.com/dscripka/openWakeWord)、[WeSpeaker](https://github.com/wenet-e2e/wespeaker)、[Kokoro](https://github.com/remsky/Kokoro-FastAPI)、[three.js](https://threejs.org/)、[sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) 和 [FunAudioLLM / FunASR](https://github.com/modelscope/FunASR) 的 SenseVoice 等。
+- **站在这些项目的肩膀上：** [Home Assistant](https://www.home-assistant.io/)、[Ollama](https://ollama.com/)、[FastAPI](https://fastapi.tiangolo.com/)、[openWakeWord](https://github.com/dscripka/openWakeWord)、[3D-Speaker](https://github.com/modelscope/3D-Speaker)、[Kokoro](https://github.com/remsky/Kokoro-FastAPI)、[three.js](https://threejs.org/)、[sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) 和 [FunAudioLLM / FunASR](https://github.com/modelscope/FunASR) 的 SenseVoice 等。
