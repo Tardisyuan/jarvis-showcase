@@ -20,7 +20,7 @@ Contact: tardisyuan@gmail.com, or [open an issue](https://github.com/Tardisyuan/
 
 ![Unlocking the front door: the approval window, a receipt, then undo](images/door.gif)
 
-**Hiring?** Start with [What was hard](#what-was-hard) and [How it was built](#how-it-was-built), then the [How it is built](https://jarvis-demo.tardisyuan.ltd/how) page. **Into Home Assistant or voice assistants?** See [For Home Assistant and voice people](#for-home-assistant-and-voice-people).
+**Hiring?** Start with [What was hard](#what-was-hard) and [How it was built](#how-it-was-built), then the [design notes](#design-notes) and the [How it is built](https://jarvis-demo.tardisyuan.ltd/how) page. **Into Home Assistant or voice assistants?** See [For Home Assistant and voice people](#for-home-assistant-and-voice-people).
 
 ## What it is
 
@@ -36,6 +36,12 @@ Most home assistants are a voice remote for your devices. Jarvis is built around
 - **One set of rules for everything it may do.** Risky actions wait in one approval window. Each approval is bound by an HMAC to exactly that item and stops working once it is answered, changes or expires, so an old "yes" can't approve something new.
 - **Words from outside are not orders.** After Jarvis reads an email or a web page, writes in that round wait for your yes, a quoted "open the door" waits too, and a cloud model never sees that content. The rules themselves (what may run, what must ask, what outside text taints) are code in a small package that needs only the standard library, not words in the prompt; the server binds each approval to its item.
 - **Judging models honestly.** Prompts tuned against a test set make that set flatter the model it was tuned for. So candidates are compared on a frozen held-out set that is never tuned against, with answers shuffled and graded blind.
+
+## Design notes
+
+- [Safety model and threat model](docs/safety-model.md): what it was designed against, how a device write is decided, what it does not protect against.
+- [How models and changes are judged](docs/evaluation.md): offline tests, real-model evaluations, a frozen held-out set graded blind, and how AI-agent work is gated.
+- [Architecture](docs/architecture.md): one request end to end, the modules, the safety core, data, the page, and the trade-offs.
 
 ## What it does
 
@@ -70,7 +76,7 @@ flowchart LR
 ## Engineering
 
 - **Backend:** Python and FastAPI, with a plugin system for feature modules.
-- **Models:** local through Ollama, or any OpenAI-compatible server. A small model gets rules to lean on, a larger one fewer (a setting, not automatic); the author's own setup runs gemma4:26b. Speech uses Kokoro, and SenseVoice or a browser's own recognition.
+- **Models:** local through Ollama, or any OpenAI-compatible server. A small model gets rules to lean on, a larger one fewer (a setting, not automatic); the author's own setup runs gemma4:26b. Speech uses Kokoro; recognition uses SenseVoice or Parakeet on the server, an OpenAI-compatible transcription server, or the browser's own.
 - **Frontend:** plain JavaScript modules and three.js, no framework. The orb is 80,000 particles with auto-adjusting quality.
 - **Quality:** 1113 offline tests, all passing on 2026-11-13, run by CI every day (with page and orb smoke tests), about 250 checks in the model evaluations, a frozen held-out set for judging models, and secret scanning on every commit. Two review rounds of the core code in November 2026 are kept with their findings, including the ones that turned out wrong (a summary is being prepared for this repository).
 - **Runs on:** a Mac, Docker on a home server, or a Raspberry Pi 5.
@@ -88,7 +94,7 @@ The skill this shows is the one I am offering: turning a vague goal into rules, 
 
 ## For Home Assistant and voice people
 
-- Jarvis talks to Home Assistant (2025.2 or newer) through its **Model Context Protocol Server** integration and sees only what you expose to Assist. Locks, covers, alarms, valves and plugs always wait for a yes.
+- Jarvis talks to Home Assistant (2025.2 or newer) through its **Model Context Protocol Server** integration and sees only what you expose to Assist. Locks, covers, alarms, valves, plugs and HA scripts always wait for a yes.
 - The brain is your own model through Ollama or any OpenAI-compatible server; the author runs gemma4:26b on a 24 GB card, and a smaller model gets more rules to lean on.
 - The wake word, the voiceprints and (optionally) speech recognition run on the server's CPU; rooms without a screen get a Raspberry Pi satellite.
 - The source is private, so it is not something to install yet. The ideas are free to take: watch this repository for updates.
