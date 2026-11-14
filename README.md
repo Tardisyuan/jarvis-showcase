@@ -10,7 +10,7 @@ By **Richard Yuan (Ruihong Yuan)** · tardisyuan@gmail.com · **[Try the live de
 
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Local models](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/offline_tests-1113_passing-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/offline_tests-1129-2ea44f?style=flat-square)
 
 **Hiring?** Start with [What was hard](#what-was-hard), then [How it was built](#how-it-was-built) and the [design notes](#design-notes). Questions or a role to talk about: email, or [open an issue](https://github.com/Tardisyuan/jarvis-showcase/issues/new/choose). **Into Home Assistant or voice assistants?** See [For Home Assistant and voice people](#for-home-assistant-and-voice-people).
 
@@ -70,7 +70,7 @@ flowchart LR
 - **Backend:** Python and FastAPI, with a plugin system for feature modules.
 - **Models:** local through Ollama, or any OpenAI-compatible server. A small model gets rules to lean on, a larger one fewer (a setting, not automatic); the author's own setup runs gemma4:26b. Speech uses Kokoro; recognition uses SenseVoice or Parakeet on the server, an OpenAI-compatible transcription server, or the browser's own.
 - **Frontend:** plain JavaScript modules and three.js, no framework. The orb is 80,000 particles with auto-adjusting quality.
-- **Quality:** 1113 offline tests, all passing on 2026-11-13, run by CI each day the code has changed (with page and orb smoke tests), 254 checks in the model evaluations, a frozen held-out set for judging models, and secret scanning on every commit. Two review rounds of the core code in November 2026 are kept with their findings, including the ones that turned out wrong; the [safety note](docs/safety-model.md#how-it-is-checked) sums them up, with [a hole a review found](docs/safety-model.md#a-hole-our-own-review-found-and-the-fix).
+- **Quality:** 1129 offline tests (counted 2026-11-15), run by CI each day the code has changed (with page and orb smoke tests), 254 checks in the model evaluations, a frozen held-out set for judging models, and secret scanning on every commit. Two review rounds of the core code in November 2026 are kept with their findings, including the ones that turned out wrong; the [safety note](docs/safety-model.md#how-it-is-checked) sums them up, with [a hole a review found](docs/safety-model.md#a-hole-our-own-review-found-and-the-fix).
 - **Runs on:** a Mac, Docker on a home server, or a Raspberry Pi 5.
 
 ## How it was built

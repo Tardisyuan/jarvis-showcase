@@ -88,7 +88,7 @@ On 2026-11-14 a design review of the whole system (run the same way as the other
 It was fixed the same day, in two parts:
 
 - **A voiceprint counts only for the login whose microphone it was heard on.** The match is kept with the stream's login, and a match from another login is dropped (`server/api_voice.py`, `core/src/jarvis_core/trust.py`). A test covers two logins on one screen.
-- **A face counts only in the screen's own room.** The owner's face is taken as "the owner is here" only where the screen and the camera both have a room and the rooms match; changing a screen's room needs the PIN.
+- **A face counts only in the screen's own room.** The owner's face is taken as "the owner is here" only where the screen and the camera both have a room and the rooms match; changing a screen's room needs the PIN, and the face counts only for a device logged in and holding that screen's live connection.
 
 Nothing was exploited: this is one household's system, and the window needed a device that was already logged in. It is here because it is the kind of result a review loop exists for: the check found it before anyone else did.
 
@@ -105,7 +105,7 @@ Nothing was exploited: this is one household's system, and the window needed a d
 
 ## How it is checked
 
-**Offline tests.** 1113 unit and integration tests (all passing on 2026-11-13) run with no Home Assistant, no model and no network, against fakes. CI runs them each day the code has changed. They cover the policy, confirmations and expiry, the approval window (a child-asked item needs the PIN), taint and quoted words, egress, redaction, the vault, receipts and the ledger. Contract tests in `tests/modules/` check every module against the safety rules: declared reads and writes, outside content tainting the turn, token routes, settings and secrets.
+**Offline tests.** 1129 unit and integration tests (counted 2026-11-15) run with no Home Assistant, no model and no network, against fakes. CI runs them each day the code has changed. They cover the policy, confirmations and expiry, the approval window (a child-asked item needs the PIN), taint and quoted words, egress, redaction, the vault, receipts and the ledger. Contract tests in `tests/modules/` check every module against the safety rules: declared reads and writes, outside content tainting the turn, token routes, settings and secrets.
 
 **Evaluations against a real model and a real Home Assistant.** The eval harness wraps the Home Assistant client and counts every write that actually reaches it. Writes are meant to be simulated; a run that sends even one real write fails. In the 2026-11-09 run (190 cases, 254 checks, a local 26B model on a 24 GB GPU) the real-write count was zero on both capability settings.
 

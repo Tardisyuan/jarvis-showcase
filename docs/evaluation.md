@@ -2,9 +2,9 @@
 
 **In short**
 
-- Three layers: 1113 offline tests with no model or network; real-model evals against the live Home Assistant where any real write fails the run; a frozen held-out set (pre-registered, never tuned against) judged blind.
+- Three layers: 1129 offline tests with no model or network; real-model evals against the live Home Assistant where any real write fails the run; a frozen held-out set (pre-registered, never tuned against) judged blind.
 - The best score on the practice set came from the setting that lost on the held-out set; the live system follows the held-out result.
-- The brain alone takes a median of 5.2 s per model-answered request; last word to first sound is not measured yet.
+- The brain alone took a median of 5.2 s per model-answered request (gemma4:26b on a 24 GB GPU, one household, one week); last word to first sound is not measured yet.
 
 Jarvis is a self-hosted household voice butler (FastAPI, Home Assistant, local models through Ollama), built by one person directing AI coding agents. This note describes how a change or a model is judged, what the numbers were on which date, and what is still not measured.
 
@@ -26,7 +26,7 @@ So there are three layers, and they answer different questions.
 
 The unit tests need no Home Assistant, no model and no network. They use fakes: a fake Home Assistant, a fake MCP server, a scripted brain, a fake memory and a mock HTTP transport. They cover the parts where a mistake is a safety bug: who may approve a write, which devices are protected, that a child's or a guest's "yes" does not count, that a lock needs the owner or a PIN, that text from an email or a quote cannot trigger a write, and that outside content is never sent to a cloud model.
 
-On 2026-11-13 the full offline run was 1113 tests, all passing. CI runs the same suite once a day, in UTC, when main has changed.
+On 2026-11-13 the full offline run was 1113 tests, all passing; by 2026-11-15 there were 1129. CI runs the same suite once a day, in UTC, when main has changed.
 
 These tests say nothing about whether a model calls the right tool. That needs a real model.
 
@@ -102,7 +102,7 @@ The code was written by AI coding agents, so the gates assume an agent's report 
 
 - **Every commit is scanned.** A git hook scans staged additions, file names and the commit message for keys, tokens, personal mailboxes, private network addresses, secret files and a private word list. It names the file and the rule, never the match. Only the owner may skip it.
 - **Test scope is a decision.** A hook refuses a full test run unless the command says it is meant. Agents run the tests a change touches. Agents working in parallel only check syntax. One merged run follows.
-- **CI runs everything daily** in UTC: the secret scan over every tracked file, ruff, the offline suite, a page smoke test and the orb's actions in a headless browser. Browser tests run only there.
+- **CI runs everything each day main has changed** (in UTC): the secret scan over every tracked file, ruff, the offline suite, a page smoke test and the orb's actions in a headless browser. Browser tests run only there.
 - **Real-model evals run only when model input changes**, and the cache makes that visible.
 - **Reviews are scored from several angles.** A batch of work goes on only when independent reviewers, each looking from one angle, score it at 95 or higher. A later review measured the noise in that gate: with a three-point wobble, work that is really at 93 passes one time in four.
 - **Findings are verified, and the wrong ones are kept.** The core review of 2026-11-09 used eight first-pass reviewers and three verifiers who checked each finding against the code. Of 42 high and medium findings, 3 did not hold up. All six "high" findings were downgraded. Four proposed fixes were wrong and were corrected. The rejected findings stay in the repository with the reasons.
