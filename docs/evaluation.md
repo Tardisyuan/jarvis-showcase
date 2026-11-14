@@ -2,7 +2,7 @@
 
 **In short**
 
-- Three layers: 1129 offline tests with no model or network; real-model evals against the live Home Assistant where any real write fails the run; a frozen held-out set (pre-registered, never tuned against) judged blind.
+- Three layers: 1149 offline tests with no model or network; real-model evals against the live Home Assistant where any real write fails the run; a frozen held-out set (pre-registered, never tuned against) judged blind.
 - The best score on the practice set came from the setting that lost on the held-out set; the live system follows the held-out result.
 - The brain alone took a median of 5.2 s per model-answered request (gemma4:26b on a 24 GB GPU, one household, one week); last word to first sound is not measured yet.
 
@@ -26,7 +26,7 @@ So there are three layers, and they answer different questions.
 
 The unit tests need no Home Assistant, no model and no network. They use fakes: a fake Home Assistant, a fake MCP server, a scripted brain, a fake memory and a mock HTTP transport. They cover the parts where a mistake is a safety bug: who may approve a write, which devices are protected, that a child's or a guest's "yes" does not count, that a lock needs the owner or a PIN, that text from an email or a quote cannot trigger a write, and that outside content is never sent to a cloud model.
 
-On 2026-11-13 the full offline run was 1113 tests, all passing; by 2026-11-14 there were 1129. CI runs the same suite once a day, in UTC, when main has changed.
+On 2026-11-13 the full offline run was 1113 tests, all passing; by 2026-11-14 there were 1149. CI runs the same suite once a day, in UTC, when main has changed.
 
 These tests say nothing about whether a model calls the right tool. That needs a real model.
 

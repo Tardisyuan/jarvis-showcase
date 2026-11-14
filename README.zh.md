@@ -10,7 +10,7 @@
 
 ![Home Assistant](https://img.shields.io/badge/Home_Assistant-18BCF2?style=flat-square&logo=homeassistant&logoColor=white)
 ![Local models](https://img.shields.io/badge/Ollama-local_models-000000?style=flat-square&logo=ollama&logoColor=white)
-![Tests](https://img.shields.io/badge/offline_tests-1129-2ea44f?style=flat-square)
+![Tests](https://img.shields.io/badge/offline_tests-1149-2ea44f?style=flat-square)
 
 **招人的话：** 先看[难在哪里](#难在哪里)，再看[怎么做出来的](#怎么做出来的)和[设计文档](#设计文档)。有问题或想聊工作机会：发邮件，或者[开一个 issue](https://github.com/Tardisyuan/jarvis-showcase/issues/new/choose)。**玩 Home Assistant 或语音助手的话：** 看[给 Home Assistant 和语音玩家](#给-home-assistant-和语音玩家)。
 
@@ -72,7 +72,7 @@ flowchart LR
 - **后端：** Python 和 FastAPI，功能模块用插件方式接入。
 - **模型：** 通过 Ollama 在本地运行，或接任何兼容 OpenAI 的服务。小模型多给规则兜底，大模型少给（手动设置，不自动切换）；作者自己用的是 gemma4:26b。语音用 Kokoro，识别用服务器上的 SenseVoice 或 Parakeet、兼容 OpenAI 的转写服务，或浏览器自带能力。
 - **前端：** 原生 JavaScript 模块和 three.js，不用框架。粒子球有 8 万颗粒子，画质自动调节。
-- **质量：** 1129 个离线测试（2026-11-14 数），代码有改动的那天 CI 跑一遍（含页面和光球的冒烟测试）；模型评测 254 项检查；用固定的留出集评估模型；每次提交都做密钥扫描。2026 年 11 月对核心代码做了两轮审查，结论连同查出来不成立的条目都留着；[安全文档](docs/safety-model.zh.md#怎么检查)里有汇总，还有[一次审查查出的漏洞](docs/safety-model.zh.md#我们自己的审查查出的漏洞和修复)。
+- **质量：** 1149 个离线测试（2026-11-14 数），代码有改动的那天 CI 跑一遍（含页面和光球的冒烟测试）；模型评测 254 项检查；用固定的留出集评估模型；每次提交都做密钥扫描。2026 年 11 月对核心代码做了两轮审查，结论连同查出来不成立的条目都留着；[安全文档](docs/safety-model.zh.md#怎么检查)里有汇总，还有[一次审查查出的漏洞](docs/safety-model.zh.md#我们自己的审查查出的漏洞和修复)。
 - **运行环境：** Mac、家用服务器上的 Docker，或树莓派 5。
 
 ## 怎么做出来的
