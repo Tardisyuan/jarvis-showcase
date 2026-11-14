@@ -1,0 +1,28 @@
+name: Question / 提问
+description: Ask how something in Jarvis works or why it was built that way. 问 Jarvis 某个部分怎么工作、为什么这样设计。
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The source code is private, so answers come as explanations, design notes and short excerpts, not as access to the code.
+        源码不公开，回答会是解释、设计文档或简短的代码片段，不会开放源码。
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question / 你的问题
+      description: What would you like to know? Link the page or the note you were reading, if any. 想知道什么？如果在看某个页面或文档，贴上链接。
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area / 方面
+      options:
+        - Safety and approvals / 安全和批准
+        - Voice and who is speaking / 语音和认人
+        - Home Assistant / Home Assistant
+        - Models and evaluation / 模型和评测
+        - Architecture and modules / 架构和模块
+        - The demo or the page / 演示或页面
+        - Other / 其他

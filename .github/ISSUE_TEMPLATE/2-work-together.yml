@@ -1,0 +1,26 @@
+name: Work together or hiring / 合作或招聘
+description: A role, a collaboration, or a talk you would like to discuss. 想聊一个职位、合作或者分享。
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out. If you'd rather not post in public, email the address in the README instead.
+        谢谢联系。不想公开发的话，直接发邮件到 README 里的地址。
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is it about? / 关于什么
+      options:
+        - A role (AI applications, full-stack) / 职位（AI 应用、全栈）
+        - A collaboration / 合作
+        - A talk or an article / 分享或文章
+        - Other / 其他
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details / 详情
+      description: A few lines about the role or the idea, and how best to reply. 简单写写职位或想法，以及怎么回复你最方便。
+    validations:
+      required: true

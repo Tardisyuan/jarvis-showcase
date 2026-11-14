@@ -1,5 +1,11 @@
 # How Jarvis judges models and changes honestly
 
+**In short**
+
+- Three layers: 1113 offline tests with no model or network; real-model evals against the live Home Assistant where any real write fails the run; a frozen held-out set (pre-registered, never tuned against) judged blind.
+- The best score on the practice set came from the setting that lost on the held-out set; the live system follows the held-out result.
+- The brain alone takes a median of 5.2 s per model-answered request; last word to first sound is not measured yet.
+
 Jarvis is a self-hosted household voice butler (FastAPI, Home Assistant, local models through Ollama), built by one person directing AI coding agents. This note describes how a change or a model is judged, what the numbers were on which date, and what is still not measured.
 
 The source is private; file paths below name places in it.
@@ -28,7 +34,7 @@ These tests say nothing about whether a model calls the right tool. That needs a
 
 `tests/evals.py` runs the real model against the real Home Assistant state, with no effect on the house. Device writes stop at the brain's single write exit (`dry_run=True`). Memories go to a throwaway in-memory database. Cases cover device control, reading sensors, protected devices, reminders and to-dos, the calendar, prompt injection (an email or a quoted message that says "turn off all the lights"), translation requests that only look like commands, and requests a module cannot do. Each case has a check written in code: was this tool called with this target, did nothing change, did the reply avoid claiming an action that did not happen.
 
-Some cases come from the owner's own logs: a log miner proposes them, and a human marks each one reviewed before it runs. The public example file shows the shape (`tests/eval_cases.example.json`, lines 2–14):
+Some cases come from the owner's own logs: a log miner proposes them, and a human marks each one reviewed before it runs. The example file in the repository shows the shape (`tests/eval_cases.example.json`, lines 2–14):
 
 ```json
   {
@@ -75,7 +81,7 @@ Judging is blind. The answers of several models or settings are shuffled, labels
 
 ## Results, with dates
 
-- **2026-11-09, practice set, gemma4:26b:** 190 cases with 254 checks. Weak passed 249/254, strong 240/254. Real writes to Home Assistant: 0 on both. Five checks failed on both settings and were counted against neither (one was a device that was offline).
+- **2026-11-09, practice set, gemma4:26b:** 190 cases with 254 checks. Weak passed 249/254, strong 240/254. Real writes to Home Assistant: 0 on both. Five checks failed on both settings, so they do not separate the two (one was a device that was offline).
 - **2026-11-12, held-out set, gemma4:26b:** the result reversed. Judge one scored strong 103 and weak 92; judge two scored strong 103 and weak 96. Strong won 13–14 scenes, weak won 6. Each setting had one invented answer that both judges flagged. Real writes: 0. The practice set had been tuned against, so the held-out set decided, and the live setting was changed to strong.
 - **2026-11-12, no-home evals** (`tests/evals_nohome.py`, a home with no Home Assistant): 6/6. Small talk worked, and every device request got a plain "no devices are connected yet", with no invented reading.
 - **2026-11-13, offline tests:** 1113, all passing.
@@ -103,10 +109,14 @@ The code was written by AI coding agents, so the gates assume an agent's report 
 
 ## Not measured yet, and known weaknesses
 
-- **End-to-end latency is not measured.** The request log records the time from the text reaching the brain to the reply (median and P95 over seven days), but not listening, recognition or speech. Wake-word rate and end-to-end delay on a real room satellite at one to three metres are still on the list.
+- **End-to-end latency is not measured.** The request log records only the brain: from the text reaching it to the reply being written. In the 7 days to 2026-11-14, the 10 requests answered by gemma4:26b took a median of 5.2 s (the slowest 24 s; too few for a P95), and the 52 answered by fixed rules a median of 0.6 s. That is one household and one week, and it leaves out listening, recognition and speech. Wake-word rate and end-to-end delay on a real room satellite at one to three metres are still on the list.
 - **One held-out set, reused.** It has been used for at least five comparisons. Choosing between models on it is a form of selection, even with no tuning. A new dated set is the planned remedy.
 - **The judges are models.** Two judges, one round each, with no measured self-consistency.
 - **Single runs.** Most model comparisons ran once. A gap of one or two cases is not significant.
 - **The practice evals depend on one home's live state.** An offline device fails a case for reasons that are not the model's.
+
+---
+
+*Part of the [Jarvis showcase](../README.md) · [live demo](https://jarvis-demo.tardisyuan.ltd/?lang=en) · [how it is built](https://jarvis-demo.tardisyuan.ltd/how). Other notes: [safety model](safety-model.md) · [architecture](architecture.md). Written November 2026; questions: [open an issue](https://github.com/Tardisyuan/jarvis-showcase/issues/new/choose).*
 
 <!-- sources: tests/evals.py (docstring; claims_without_action; counted() lines 569-576; fake strong model; SystemExit on real_writes); tests/evals_nohome.py; tests/eval_cases.example.json lines 2-14; CONTRIBUTING.md (offline tests, evals, "run twice"); tools/converse/README.md; tools/converse/heldout-2026-11-01.json (structure only: 76 scenes); docs/handoff.md §工作规矩 4-8 and §六 9, 14, 26-28, 101 (2026-11-01 practice vs held-out, gemma4 switch 2026-11-07); docs/reviews-2026-11-09/optimize-plan.zh.md §八 (249/254, 240/254, 0 real writes, 2026-11-09); docs/research/upgrades-2026-11-12/README.zh.md (held-out strong vs weak, no-home 6/6, switch to strong); docs/rules-audit-2026-11-01.md; docs/converse-findings-2026-10-31.md; docs/model-compare-2026-10-28.md (single-run caveat); commit 1071115b (1113 offline tests, 2026-11-13); commit 5a257503 (overfitted rules made general, 2026-11-09); commit 0a8b6d33 and server/brain_tools.py:82 (rule read out, 2026-11-08); .githooks/pre-commit; .githooks/test-scope.sh; .github/workflows/test.yml; docs/reviews-2026-11-09/README.zh.md; docs/reviews-2026-11-14-design/verify/opus.zh.md (95 gate noise, Wilson intervals, held-out used 5+ times); server/modules/traces/README.md -->

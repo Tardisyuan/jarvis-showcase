@@ -1,0 +1,9 @@
+labels: [question]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question / 你的问题
+      description: How something works, why it was built that way, or how you would do the same in your own home. 某个部分怎么工作、为什么这样做，或者在你家怎么做类似的事。
+    validations:
+      required: true

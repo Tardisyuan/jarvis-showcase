@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ideas and general talk / 想法和闲聊
+    url: https://github.com/Tardisyuan/jarvis-showcase/discussions
+    about: Open-ended questions, ideas and "how would you do X" go to Discussions. 开放的问题和想法请发到 Discussions。
+  - name: Try the live demo / 在线演示
+    url: https://jarvis-demo.tardisyuan.ltd/?lang=en
+    about: A scripted demo of the main screen, with made-up data. 主界面的脚本演示，数据是假的。

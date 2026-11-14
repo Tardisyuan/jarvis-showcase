@@ -1,0 +1,27 @@
+name: Something wrong on these pages / 页面或文档有问题
+description: A broken link, a wrong number, a demo that doesn't load, or a claim that doesn't add up. 坏链接、数字不对、演示打不开、说法对不上。
+labels: [documentation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This covers what you can see: this repository, the design notes, the demo and the /how page. The source is private, so there is no code to attach.
+        只限能看到的部分：这个仓库、设计文档、演示站和 /how 页。源码不公开，不需要附代码。
+  - type: input
+    id: where
+    attributes:
+      label: Where / 在哪里
+      description: The URL or file, e.g. docs/safety-model.md or https://jarvis-demo.tardisyuan.ltd/how
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong / 哪里不对
+      description: What you saw, and what you expected. 看到了什么，本来应该是什么。
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device, for the demo / 浏览器和设备（演示站的问题才需要）

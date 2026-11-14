@@ -1,5 +1,11 @@
 # Jarvis's architecture: one request end to end, and why it is built this way
 
+**In short**
+
+- A screen or a room satellite hears the request; the server works out who is speaking, the brain (your own model) proposes, and one set of rules in a stdlib-only package decides.
+- 55 feature modules reach the core only through one small API, declare what they read, write and connect to, and are checked by contract tests.
+- No framework and no build step on the page; one SQLite file with ordered migrations on the server.
+
 Jarvis is a voice butler for one household, on the household's own machines. It knows who is speaking, acts within limits the owner sets, and leaves a receipt for everything it does. This note follows one spoken request through it. The source is private; paths below are places in it.
 
 The idea behind most of the choices is simple. The language model is the part most likely to be wrong, or to be talked into something by text it reads. So the model proposes and plain code decides.
@@ -17,7 +23,7 @@ flowchart LR
   end
   act --> ha["Home Assistant<br/>(over MCP)"]
   act --> mods["55 modules<br/>calendar · archive · maps …"]
-  mods -.->|declared hosts only, every request logged| out["Services outside:<br/>model server, TTS, optional STT,<br/>maps, transit, parcel tracking,<br/>weather, off-site backup"]
+  mods -.->|declared hosts only, every request logged| out["Other services, on your network or outside:<br/>model server, TTS, optional STT,<br/>maps, transit, parcel tracking,<br/>weather, off-site backup"]
 ```
 
 The page talks only to the Jarvis server. The Home Assistant token, the model endpoints and every module's API keys stay on the server; the page never receives them (`server/app.py`). Home Assistant is reached through its Model Context Protocol server, so Jarvis sees only the entities the owner exposes to Assist.
@@ -58,7 +64,7 @@ Writes to locks, covers, alarms, valves, switches (plugs) and HA scripts always 
 
 **Timings.** The `traces` module records each request's duration and model rounds. There is no reliable measure yet of end-to-end latency, from your last word to Jarvis's first. The numbers above are configured limits, not measured speeds.
 
-## Modules: 55 features, each one removable, all through one door
+## Modules: 55 features, all but two removable, all through one door
 
 Every feature is one of 55 modules in `server/modules/<name>/`, Home Assistant itself included. The owner can turn any of them off except two: `safety` (the help call) and `ha`. The core keeps only the brain loop, policy and confirmation, auth, the database, config, the voice pipeline and memory, plus generic hooks.
 
@@ -83,7 +89,7 @@ The network list is enforced: each module's own HTTP client checks every request
 
 ## The safety core is a separate package with no dependencies
 
-The rules live in `core/` as `jarvis-core`. It has 2,137 lines across ten files, and its `pyproject.toml` says `dependencies = []`, with a comment: no web framework, no model client, no Home Assistant. It holds the policy, confirmations, which words count as yes, taint and egress, argument checks, who is asking, receipts and the egress ledger, unprompted notices, and the module contract.
+The rules live in `core/` as `jarvis-core`. It has about 2,100 lines across ten files, and its `pyproject.toml` says `dependencies = []`, with a comment: no web framework, no model client, no Home Assistant. It holds the policy, confirmations, which words count as yes, taint and egress, argument checks, who is asking, receipts and the egress ledger, unprompted notices, and the module contract.
 
 Why: the rules can be read and tested without the server; no framework or SDK upgrade can quietly change them; and review has a clear boundary, since a change to `core/` is a change to what Jarvis may do.
 
@@ -105,10 +111,14 @@ The orb is a three.js particle system of 8 ribbons × 10,000 particles, 80,000 i
 
 ## Trade-offs, what was cut, and what runs where
 
-- **Rules that lean in or step aside.** `brain.capability` is a setting. On "weak" (the default, for a ~9B model) common requests go by rule and tools are offered only when the words ask; on "strong" every allowed tool is offered. It never switches by itself, and the safety rules are the same on both.
+- **Rules that lean in or step aside.** `brain.capability` is a setting. On "weak" (the default, for a ~9B model; the author runs "strong" since 2026-11-12) common requests go by rule and tools are offered only when the words ask; on "strong" every allowed tool is offered. It never switches by itself, and the safety rules are the same on both.
 - **Narrow streaming.** Actions feel slower, but nothing is spoken before the policy decides.
 - **Shelved:** autonomous agents that write and run their own code, an automatically pulled skill marketplace, a Chinese wake word, music, anything to do with money, and gestures. Moving the server onto the home server is also shelved for now.
 
 **What runs where.** The author's live instance of the Jarvis server runs on a Mac. A home server runs Home Assistant in a VM and the model server: the brain is a 26B model on a 24 GB GPU, and text to speech runs there too. A second GPU serves the embeddings. A Raspberry Pi 5 is the room-satellite trial and the performance rig for the page. The same server also runs from `compose.yaml` in Docker, on a home server or a Raspberry Pi 5.
+
+---
+
+*Part of the [Jarvis showcase](../README.md) · [live demo](https://jarvis-demo.tardisyuan.ltd/?lang=en) · [how it is built](https://jarvis-demo.tardisyuan.ltd/how). Other notes: [safety model](safety-model.md) · [how models are judged](evaluation.md). Written November 2026; questions: [open an issue](https://github.com/Tardisyuan/jarvis-showcase/issues/new/choose).*
 
 <!-- sources: README.md; docs/guide.md (Privacy, Modules); server/app.py; server/brain.py (ask, whole_request, _ask, _loop, _final_reply, _run_calls, _after_calls, should_stream); server/brain_tools.py (run_tool, _run_tool, run_external); server/config.py (REQUEST_BUDGET_S); server/api_chat.py; server/api_page.py (/api/events); server/api_voice.py (/api/wake); server/wake.py; server/stt.py; server/heard.py; server/voiceid.py; server/tts.py; server/streaming.py; server/memory.py; server/crypto.py; server/vault.py; server/db.py (_migrate, CORE_SEALED); server/db_migrations.py; server/netguard.py; server/state.py (NEVER_OFF); server/modules/README.md; server/modules/kit.py; server/modules/maps/module.toml; server/modules/satellites/README.md; tests/modules/test_contract.py; tests/modules/test_contract_boot.py; core/README.md; core/pyproject.toml; core/src/jarvis_core/{policy,confirm,trust}.py; page/package.json; page/vendor/VERSIONS.md; page/orb/silk.js; page/orb/loop.js; page/main/{panels,voice,speech}.js; tools/demo/how.html; docs/roadmap.md (E, Shelved); docs/handoff.md §一, §二, §六 -->

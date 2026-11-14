@@ -1,0 +1,8 @@
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea / 想法
+      description: What would you add, change or borrow? Ideas from these notes are free to take. 想加什么、改什么、借什么？这些文档里的想法可以随便拿去用。
+    validations:
+      required: true
