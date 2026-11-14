@@ -70,7 +70,7 @@ flowchart LR
 - **Backend:** Python and FastAPI, with a plugin system for feature modules.
 - **Models:** local through Ollama, or any OpenAI-compatible server. A small model gets rules to lean on, a larger one fewer (a setting, not automatic); the author's own setup runs gemma4:26b. Speech uses Kokoro; recognition uses SenseVoice or Parakeet on the server, an OpenAI-compatible transcription server, or the browser's own.
 - **Frontend:** plain JavaScript modules and three.js, no framework. The orb is 80,000 particles with auto-adjusting quality.
-- **Quality:** 1129 offline tests (counted 2026-11-15), run by CI each day the code has changed (with page and orb smoke tests), 254 checks in the model evaluations, a frozen held-out set for judging models, and secret scanning on every commit. Two review rounds of the core code in November 2026 are kept with their findings, including the ones that turned out wrong; the [safety note](docs/safety-model.md#how-it-is-checked) sums them up, with [a hole a review found](docs/safety-model.md#a-hole-our-own-review-found-and-the-fix).
+- **Quality:** 1129 offline tests (counted 2026-11-14), run by CI each day the code has changed (with page and orb smoke tests), 254 checks in the model evaluations, a frozen held-out set for judging models, and secret scanning on every commit. Two review rounds of the core code in November 2026 are kept with their findings, including the ones that turned out wrong; the [safety note](docs/safety-model.md#how-it-is-checked) sums them up, with [a hole a review found](docs/safety-model.md#a-hole-our-own-review-found-and-the-fix).
 - **Runs on:** a Mac, Docker on a home server, or a Raspberry Pi 5.
 
 ## How it was built
